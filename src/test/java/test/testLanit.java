@@ -1,3 +1,5 @@
+package test;
+
 import com.codeborne.selenide.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -19,12 +21,12 @@ public class testLanit{
     @BeforeTest
     public void setUP () {
         System.setProperty("webdriver.chrome.driver", "src/resources/chromedriver.exe");
+        Configuration.timeout = 3000;
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-save-password-bubble");
-        driver = new ChromeDriver(options);
+        WebDriver driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         WebDriverRunner.setWebDriver(driver);
-        timeout = 10000;
     }
 
     @AfterTest
