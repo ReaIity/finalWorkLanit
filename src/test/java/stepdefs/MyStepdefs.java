@@ -9,84 +9,126 @@ import cucumber.api.java.ru.Затем;
 import cucumber.api.java.ru.Также;
 import org.openqa.selenium.By;
 
-import static com.codeborne.selenide.Condition.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import static pages.AbstractPage.getPageByTitle;
+import static pages.AbstractPage.getUrlByTitle;
+import static test.strings.userLogin;
+import static test.strings.userPassword;
 import static com.codeborne.selenide.Selenide.*;
+
+
+import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Selenide.$;
 
 public class MyStepdefs {
 
+    List<String> subscribes = new ArrayList<>();
+
     @И("Начинаем тест")
     public void начинаемТест() {
-        System.out.println("Тест начат");
+        
+        System.out.println("Старт теста");
+        
     }
 
-    @И("Открываем сайт")
-    public void открываемСайт() {
-        open("https://dev.n7lanit.ru/");
+    @И("Открываем страницу {string}")
+    public void открываемСайт(String site) throws ClassNotFoundException, InterruptedException  {
+        
+        open(getUrlByTitle(site));
+        
     }
 
-    @И("Находим кнопку Войти")
-    public void находимКнопкуВойти() {
+    @И("На странице {string} находим кнопку {string}")
+    public void находимКнопкуВойти(String str, String nameEL) throws ClassNotFoundException,InterruptedException {
+        
         System.out.println("Находим кнопку Войти");
-        $(By.xpath("//button[contains(text(), 'Войти')]/..")).should(Condition.visible).click();
+        getPageByTitle(str).getElementByName(nameEL).click();
+        
     }
 
-    @Затем("Проходим авторизацию")
-    public void вводимЛогин() {
+    @Затем("на странице {string} ввести логин {string}")
+    public void вводимЛогин(String str, String login) throws ClassNotFoundException, InterruptedException {
+        
         System.out.println("Проходим авторизацию");
-        $(By.xpath("//div[@class='control-input']/input[@id='id_username']")).val("Noxiver");
-        $(By.xpath("//div[@class='control-input']/input[@id='id_password']")).val("Strekoza").pressEnter();
+        getPageByTitle(str).getElementByName(login).val(userLogin);
+
     }
 
-    @И("Проверяем авторизацию")
-    public void проверяемАвторизацию() {
+    @Также("на странице {string} ввести пароль {string}")
+    public void вводимПароль(String str, String pass) throws ClassNotFoundException, InterruptedException {
+        
+        getPageByTitle(str).getElementByName(pass).val(userPassword).pressEnter();
+        
+    }
+
+
+    @И("на странице {string} проверить наличие иконки {string}")
+    public void проверяемАвторизацию(String str, String icon) throws ClassNotFoundException, InterruptedException {
+        
         System.out.println("Проверяем авторизацию");
-        $(By.xpath("//*[@id=\"user-menu-mount\"]/ul/li[3]/a/img")).should(Condition.visible);
-    }
-
-    @Затем("Выбираем случайную тему, не являющуюся опросом")
-    public void выбираемСлучайнуюТему() {
-        System.out.println("Выбираем случайную тему, не являющуюся опросом");
-        open("https://dev.n7lanit.ru/");
-        ElementsCollection collection = $$(By.xpath("//span[@class='thread-detail-replies' and not(preceding-sibling::span)]/ancestor::div[3]/a"));
-        collection.get((int) (collection.size()*Math.random())).click();
+        getPageByTitle(str).getElementByName(icon).should(Condition.image);
+        
     }
 
 
-    @И("Находим кнопку ответить и жмем на неё")
-    public void находимИЖмемКнопкуОтветить() {
-        System.out.println("Находим кнопку ответить и жмем на неё");
-        Selenide.sleep(1000);
-        $(By.xpath("//div[@class='col-sm-4 hidden-xs']/button[@class='btn btn-primary btn-block btn-outline']")).shouldHave(text("Ответить")).click();
+    @И("на странице {string} нажать на кнопку статуса {string}")
+    public void наСтраницеНажатьНаКнопкуСтатуса(String str, String inactive) throws InterruptedException, ClassNotFoundException {
+
+        Thread.sleep(3000);
+        getPageByTitle(str).getElementByName(inactive).click();
+
+        subscribes.add(getPageByTitle(str).getElementByName("Выбранный топик").getAttribute("href").replaceAll("https:\\/\\/dev.n7lanit.ru",""));
+
     }
 
-    @И("Оставлем комментарий")
-    public void оставляемКомментарий() {
-        System.out.println("Оставлем комментарий");
-        $(By.xpath("//textarea[@id='editor-textarea']")).shouldBe(Condition.visible).val("Привет мир!").submit();
+    @И("на странице {string} в выпадающем меню нажать кнопку подписки {string}")
+    public void наСтраницеВВыпадающемМенюНажатьКнопкуПодписки(String str, String sub) throws InterruptedException, ClassNotFoundException {
+
+        Thread.sleep(1000);
+        getPageByTitle(str).getElementByName(sub).should(visible).click();
+
     }
 
-    @И("Проверяем наличие коментария")
-    public void проверяемНаличиеКомментария() {
-        System.out.println("Проверяем наличие коментария");
-        $(By.xpath("//div[@class='post-body']/article/p[contains(text(),'Привет мир!')]")).isDisplayed();
+
+    @И("на странице {string} нажать кнопку со списком всех подписок {string}")
+    public void наСтраницеНажатьКнопкуСоСпискомВсехПодписок(String str, String subscribes) throws InterruptedException, ClassNotFoundException {
+
+        Thread.sleep(1000);
+        getPageByTitle(str).getElementByName(subscribes).should(visible).click();
+
     }
 
-    @Затем("Переходим во вкладку Темы")
-    public void переходимВоВкладкуТемы() {
-        System.out.println("Переходим во вкладку Темы");
-        $(By.xpath("//ul[@class='nav navbar-nav']//a[contains(text(),'Темы')]")).shouldBe(visible).click();
+    @И("Проверить наличие подписок")
+    public void проверитьНаличиеПодписок() throws InterruptedException {
+
+        Thread.sleep(1000);
+
+        for(int i =0; i < subscribes.size(); i++){
+            String s = subscribes.get(i);
+            $(By.xpath("//*[@href='"+ s +"']")).should(Condition.visible);
+        }
+        Thread.sleep(3000);
+
     }
 
-    @Также("Повторяем шаги с коментарием")
-    public void повторяемШагиСКоментарием() {
-        System.out.println("Повторяем шаги с коментарием");
-        ElementsCollection collection = $$(By.xpath("//span[@class='thread-detail-replies' and not(preceding-sibling::span)]/ancestor::div[3]/a"));
-        collection.get((int) (collection.size()*Math.random())).click();
-        Selenide.sleep(6000);
-        $(By.xpath("//div[@class='col-sm-4 hidden-xs']/button[@class='btn btn-primary btn-block btn-outline']")).shouldHave(text("Ответить")).click();
-        $(By.xpath("//textarea[@id='editor-textarea']")).shouldBe(Condition.visible).val("Привет мир!").submit();
-        $(By.xpath("//div[@class='post-body']/article/p[contains(text(),'Привет мир!')]")).isDisplayed();
-        $(By.xpath("//ul[@class='nav navbar-nav']//a[contains(text(),'Темы')]")).shouldBe(visible).click();
+    @И("на странице {string} отписаться {string} от новых тем")
+    public void наСтраницеОтписатьсяОтНовыхТем(String str, String unsubscribe) throws InterruptedException, ClassNotFoundException {
+
+        Thread.sleep(1000);
+
+        for(int i =0; i < subscribes.size(); i++){
+            Thread.sleep(2000);
+            String s = subscribes.get(i);
+            $(By.xpath("//*[@href='"+ s +"']/ancestor::div[4]//*[@class='col-sm-2 col-md-2 hidden-xs']//*[@class='col-xs-12 hidden-xs hidden-sm']" +
+                    "//button[@type='button']")).click();
+            getPageByTitle(str).getElementByName(unsubscribe).click();
+        }
+
     }
 
+    @Затем("повторить шаги")
+    public void повторитьШаги() {
+    }
 }

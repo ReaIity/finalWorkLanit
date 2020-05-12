@@ -48,6 +48,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.reflections</groupId>
+      <artifactId>reflections</artifactId>
+      <version>0.9.12</version>
+    </dependency>
+
+    <dependency>
       <groupId> org.apache.cassandra</groupId>
       <artifactId>cassandra-all</artifactId>
       <version>0.8.1</version>
@@ -62,7 +68,11 @@
           <artifactId>log4j</artifactId>
         </exclusion>
       </exclusions>
-
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>22.0</version>
     </dependency>
   </dependencies>
 

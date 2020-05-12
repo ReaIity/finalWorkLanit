@@ -5,11 +5,11 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.WebDriverRunner;
 
+import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.testng.annotations.AfterTest;
 
 public class Hooks {
 
@@ -22,12 +22,13 @@ public class Hooks {
         WebDriver driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         WebDriverRunner.setWebDriver(driver);
-        System.out.println("Мы в бефор хукс");
     }
 
-    @AfterTest
-    public void quitBrowser () {
-        Selenide.closeWebDriver();
+    @After
+    public void After() {
+
+        WebDriverRunner.closeWebDriver();
+
     }
 
 

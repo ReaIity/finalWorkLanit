@@ -38,8 +38,8 @@ public class testLanit{
     public void A_loginTest() {
         open("https://dev.n7lanit.ru/");
         $(By.xpath("//button[contains(text(), 'Войти')]/..")).should(Condition.visible).click();
-        $(By.xpath("//div[@class='control-input']/input[@id='id_username']")).val("Noxiver");
-        $(By.xpath("//div[@class='control-input']/input[@id='id_password']")).val("Strekoza").pressEnter();
+        $(By.xpath("//div[@class='control-input']/input[@id='id_username']")).val("TestCor");
+        $(By.xpath("//div[@class='control-input']/input[@id='id_password']")).val("1111111g").pressEnter();
         $(By.xpath("//*[@id=\"user-menu-mount\"]/ul/li[3]/a/img")).should(Condition.visible);
 
     }
